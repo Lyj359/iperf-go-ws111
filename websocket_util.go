@@ -3,9 +3,10 @@ package iperf_go_ws
 import (
 	"context"
 	"errors"
+	"sync"
+
 	"github.com/gorilla/websocket"
 	log "github.com/sirupsen/logrus"
-	"sync"
 )
 
 // WsConn 封装的基本结构体
@@ -132,7 +133,8 @@ func (conn *WsConn) WriteMsgLoop() {
 				conn.CloseConn()
 			}
 		case <-conn.ctx.Done():
-			err = errors.New("connection is closed")
+			_ = errors.New("connection is closed")
+			return
 		}
 	}
 }
